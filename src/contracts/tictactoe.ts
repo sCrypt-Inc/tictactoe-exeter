@@ -44,12 +44,8 @@ export class TicTacToe extends SmartContract {
     public move(n: bigint, sig: Sig) {
         // check position `n`
         assert(n >= 0n && n < 9n)
-        // check signature `sig`
+        // TODO: check signature `sig`
         const currentPlayer: PubKey = this.isAliceTurn ? this.alice : this.bob
-        assert(
-            this.checkSig(sig, currentPlayer),
-            `checkSig failed, pubkey: ${currentPlayer}`
-        )
         // update stateful properties to make the move
         assert(
             this.board[Number(n)] == TicTacToe.EMPTY,
@@ -62,10 +58,7 @@ export class TicTacToe extends SmartContract {
         // build the transation outputs
         let outputs = toByteString('')
         if (this.won(play)) {
-            outputs = Utils.buildPublicKeyHashOutput(
-                hash160(currentPlayer),
-                this.ctx.utxo.value
-            )
+            // TODO: build a P2PKH output to the winner
         } else if (this.full()) {
             const halfAmount = this.ctx.utxo.value / 2n
             const aliceOutput = Utils.buildPublicKeyHashOutput(
@@ -78,8 +71,7 @@ export class TicTacToe extends SmartContract {
             )
             outputs = aliceOutput + bobOutput
         } else {
-            // build a output that contains latest contract state.
-            outputs = this.buildStateOutput(this.ctx.utxo.value)
+            // TODO: build a output that contains latest contract state.
         }
 
         outputs += this.buildChangeOutput()

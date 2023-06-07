@@ -5,7 +5,8 @@ import { getDummySigner } from '../utils/txHelper'
 
 async function oneRound(records: bigint[]) {
     const aliceKey = bsv.PrivateKey.fromRandom('testnet')
-    const bobKey = bsv.PrivateKey.fromRandom('testnet')
+    // TODO: generate bob's key
+    const bobKey = undefined
 
     const alice = PubKey(toHex(aliceKey.publicKey))
     const bob = PubKey(toHex(bobKey.publicKey))
@@ -14,10 +15,9 @@ async function oneRound(records: bigint[]) {
     // bind a tx builder for method `move`
     instance.bindTxBuilder('move', TicTacToe.buildTxForMove)
 
-    // connect to a signer
+    // TODO: connect to a signer
     const signer = getDummySigner()
     signer.addPrivateKey([aliceKey, bobKey])
-    await instance.connect(signer)
 
     const changeAddress = await signer.getDefaultAddress()
 
@@ -37,9 +37,9 @@ async function oneRound(records: bigint[]) {
             : bobKey.publicKey
         const { tx, next } = await currentInstance.methods.move(
             records[i],
-            (sigResps) => findSig(sigResps, pubKey),
+            // TODO: retrieve the signature
             {
-                pubKeyOrAddrToSign: pubKey,
+                // TODO: specify the public key to sign
                 changeAddress,
             } as MethodCallOptions<TicTacToe>
         )
